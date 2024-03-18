@@ -2,9 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 )
+
+func logging(f http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.Method, r.URL.Path, r.RemoteAddr)
+		f(w, r)
+	}
+}
 
 func getPort() string {
 	port := os.Getenv("PORT")
@@ -18,9 +26,9 @@ func getPort() string {
 }
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", logging(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, you've requested: %s\n", r.URL.Path)
-	})
+	}))
 
 	http.ListenAndServe(getPort(), nil)
 }
