@@ -26,9 +26,13 @@ func getPort() string {
 }
 
 func main() {
+	port := getPort()
+
+	log.Println("Starting server on port ", port)
+
 	http.HandleFunc("/", logging(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, you've requested: %s\n", r.URL.Path)
 	}))
 
-	http.ListenAndServe(getPort(), nil)
+	http.ListenAndServe(port, nil)
 }
