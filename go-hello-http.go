@@ -34,5 +34,9 @@ func main() {
 		fmt.Fprintf(w, "Hello, you've requested: %s\n", r.URL.Path)
 	}))
 
+	http.HandleFunc("/health", logging(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "OK\n")
+	}))
+
 	http.ListenAndServe(port, nil)
 }
